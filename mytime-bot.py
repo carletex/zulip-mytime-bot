@@ -2,7 +2,6 @@
 
 import zulip
 import sys
-from credentials import *
 
 # Subscriptions
 f = open('subscriptions.txt', 'r')
@@ -19,7 +18,10 @@ finally:
 client = zulip.Client(email = access['email'],
                       api_key = access['api_key'])
 
-client.add_subscriptions([{"name": stream_name} for stream_name in ZULIP_STREAMS])
+# client.add_subscriptions([{"name": stream_name} for stream_name in ZULIP_STREAMS])
+
+def hs_auth():
+
 
 def respond(msg):
 
@@ -32,7 +34,7 @@ def respond(msg):
     	# 2 - Get info from HS
     	# 3 - Get time
     	# 4 - Send message
-    	pass	
+    	pass
 
 client.send_message({
     "type": "private",
