@@ -3,6 +3,12 @@
 import zulip
 import sys
 from credentials import *
+from hs_oauth import get_access_token, get_hs_credentials, request
+
+HS_BASE_URL = 'https://www.hackerschool.com/api/v1'
+username, password = get_hs_credentials()
+access_token, refresh_token = get_access_token(username=username, password=password)
+print 'token received'
 
 # Subscriptions
 f = open('subscriptions.txt', 'r')
@@ -22,15 +28,14 @@ client = zulip.Client(email = access['email'],
 # client.add_subscriptions([{"name": stream_name} for stream_name in ZULIP_STREAMS])
 
 def get_hs_person_info(sender_email):
-    # 1 - Get token or use the existing on if is still valid
-    # 2 - Get person info: request /people/:email
-    # mock
-    person = {'bacth': {'end_date': '2014-10-02'}}
-    # 3 - Return the person
+    # 1 - Get person info: request /people/:email
+    person = request(access_token, HS_BASE_URL + '/people/me')
+    # 2 - Return the person
     return person
 
 def get_time_diff(end_date):
-    return '1 month, 2 weeks, 5 days, 2 hour, 24 minutes and 14 seconds'
+    # ToDo
+    return end_date
 
 
 def process_message(msg):
@@ -47,7 +52,7 @@ def process_message(msg):
         person = get_hs_person_info(sender_email)
 
         # 3 - Get time
-        time_left = get_time_diff(person['bacth']['end_date'])
+        time_left = get_time_diff(person['batch']['end_date'])
 
         # 4 - Send message
         print msg
