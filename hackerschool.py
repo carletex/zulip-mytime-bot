@@ -14,5 +14,5 @@ hs_app = oauth.remote_app(
 )
 
 @hs_app.tokengetter
-def get__token(token=None):
+def get_token(token=None):
     return session.get('login')
