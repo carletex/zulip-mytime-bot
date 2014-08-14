@@ -18,8 +18,6 @@ def get_hs_person_info(sender_email):
     return person
 
 def get_time_diff(end_date, start_date = 0):
-    if not end_date:
-        #
     end_date = time.mktime(datetime.datetime.strptime(end_date, "%Y-%m-%d %H:%M:%S").timetuple())
     start_date = time.mktime(datetime.datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S").timetuple())
     diff = end_date - start_date
