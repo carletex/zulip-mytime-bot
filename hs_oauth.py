@@ -8,8 +8,8 @@ import os
 
 from requests import get, post, Session
 
-HS_ID = os.environ.get('CONSUMER_KEY', None)
-HS_SECRET = os.environ.get('CONSUMER_SECRET', None)
+HS_ID = os.environ.get('HS_CONSUMER_KEY', None)
+HS_SECRET = os.environ.get('HS_CONSUMER_SECRET', None)
 
 # The redirect url should match exactly with the url provided when
 # registering the client, if one was provided.

@@ -5,37 +5,41 @@ import sys
 import time
 import datetime
 import math
-from credentials import *
+import os
 from hs_oauth import get_access_token, get_hs_credentials, request
 
-time_units = [('week', 7*24*60*60), ('day', 24*60*60), ('hour', 60*60), ('min', 60), ('second', 1)]
-
+time_units = [('week', 7*24*60*60), ('day', 24*60*60), ('hour', 60*60), ('minute', 60), ('second', 1)]
 
 def get_hs_person_info(sender_email):
-    # 1 - Get person info: request /people/:email
+    # 1 - Get person info: request /people/:email (waiting to that HS API implementation)
     person = request(access_token, HS_BASE_URL + '/people/me')
     # 2 - Return the person
     return person
 
 def get_time_diff(end_date, start_date = 0):
+    ''' Get the formatted difference between two dates '''
+
     end_date = time.mktime(datetime.datetime.strptime(end_date, "%Y-%m-%d %H:%M:%S").timetuple())
+    if not start_date:
+        start_date = time.strftime('%Y-%m-%d %H:%M:%S')
+
     start_date = time.mktime(datetime.datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S").timetuple())
-    diff = end_date - start_date
+
+    diff = abs(end_date - start_date)
     output = ''
     for unit in time_units:
-        number = diff / unit[1]
-        if number >= 1:
-            output += str(int(math.floor(number))) + ' ' + unit[0]
-            if number >= 2:
+        division = diff / unit[1]
+        if division >= 1:
+            output += str(int(math.floor(division))) + ' ' + unit[0]
+            if division >= 2:
                 output += 's'
             output += ' '
             diff = diff % unit[1]
 
-    return output
+    return output.rstrip()
 
 
 def process_message(msg):
-
     content = msg['content'].upper().split()
 
     if (msg['sender_email'] == 'oceanrdn@gmail.com') and ((content[0] == "MYTIME")
@@ -48,7 +52,8 @@ def process_message(msg):
         person = get_hs_person_info(sender_email)
 
         # 3 - Get time
-        time_left = get_time_diff(person['batch']['end_date'])
+        hs_end_date = person['batch']['end_date'] + ' 18:30:00'
+        time_left = get_time_diff(hs_end_date)
 
         # 4 - Send message
         print msg
@@ -59,18 +64,22 @@ def process_message(msg):
         })
 
 
-# Print each message the user receives
-# This is a blocking call that will run forever
-
-
 if __name__ == '__main__':
+
+    # HS auth
     HS_BASE_URL = 'https://www.hackerschool.com/api/v1'
+
     username, password = get_hs_credentials()
     access_token, refresh_token = get_access_token(username=username, password=password)
-    print 'token received'
-    # Subscriptions
-    f = open('subscriptions.txt', 'r')
 
+    print 'HS OAauth: access token received'
+    print 'Listening to messages...'
+
+    # Zulip Auth
+    client = zulip.Client(email = os.environ.get('ZULIP_BOT_EMAIL', None),
+                          api_key = os.environ.get('ZULIP_API_KEY', None))
+    # Zulip subscriptions
+    f = open('subscriptions.txt', 'r')
     ZULIP_STREAMS = []
 
     try:
@@ -78,9 +87,8 @@ if __name__ == '__main__':
             ZULIP_STREAMS.append(line.strip())
     finally:
         f.close()
+
     client.add_subscriptions([{"name": stream_name} for stream_name in ZULIP_STREAMS])
 
-    # Zulip Auth
-    client = zulip.Client(email = access['email'],
-                          api_key = access['api_key'])
+    # Listening: This is a blocking call that will run forever
     client.call_on_each_message(process_message)
