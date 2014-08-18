@@ -8,7 +8,7 @@ import math
 import os
 from hs_oauth import get_access_token, get_hs_credentials, request
 
-time_units = [('week', 7*24*60*60), ('day', 24*60*60), ('hour', 60*60), ('minute', 60), ('second', 1)]
+TIME_UNITS = [('week', 7*24*60*60), ('day', 24*60*60), ('hour', 60*60), ('minute', 60), ('second', 1)]
 
 def get_hs_person_info(sender_email):
     # 1 - Get person info: request /people/:email (waiting to that HS API implementation)
@@ -27,7 +27,7 @@ def get_time_diff(end_date, start_date = 0):
 
     diff = abs(end_date - start_date)
     output = ''
-    for unit in time_units:
+    for unit in TIME_UNITS:
         division = diff / unit[1]
         if division >= 1:
             output += str(int(math.floor(division))) + ' ' + unit[0]
@@ -42,7 +42,7 @@ def get_time_diff(end_date, start_date = 0):
 def process_message(msg):
     content = msg['content'].upper().split()
 
-    if (msg['sender_email'] == 'oceanrdn@gmail.com') and ((content[0] == "MYTIME")
+    if ((content[0] == "MYTIME")
         or (content[0] == "@**MYTIME" and content[1] == "BOT**" and content[2] == "MYTIME")):
         # Bot called
         # 1 - Get user's email
@@ -59,7 +59,7 @@ def process_message(msg):
         print msg
         client.send_message({
             "type": "private",
-            "to": "oceanrdn@gmail.com",
+            "to": msg['sender_email'],
             "content": "You have " + time_left +" days left in HackerSchool."
         })
 
