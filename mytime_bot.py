@@ -6,13 +6,14 @@ import time
 import datetime
 import math
 import os
+import urllib
 from hs_oauth import get_access_token, get_hs_credentials, request
 
 TIME_UNITS = [('week', 7*24*60*60), ('day', 24*60*60), ('hour', 60*60), ('minute', 60), ('second', 1)]
 
 def get_hs_person_info(sender_email):
-    # 1 - Get person info: request /people/:email (waiting to that HS API implementation)
-    person = request(access_token, HS_BASE_URL + '/people/me')
+    # 1 - Get person info: request /people/:email
+    person = request(access_token, HS_BASE_URL + '/people/' + urllib.quote(sender_email))
     # 2 - Return the person
     return person
 
@@ -60,7 +61,7 @@ def process_message(msg):
         client.send_message({
             "type": "private",
             "to": msg['sender_email'],
-            "content": "You have " + time_left +" days left in HackerSchool."
+            "content": "You have " + time_left +" left in HackerSchool."
         })
 
 
