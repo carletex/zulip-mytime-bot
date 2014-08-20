@@ -1,5 +1,5 @@
 import unittest
-from mytime_bot import *
+from pressure_bot import *
 
 class TestMTB(unittest.TestCase):
 
