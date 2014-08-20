@@ -7,7 +7,7 @@ import datetime
 import math
 import os
 import urllib
-from hs_oauth import get_access_token, get_hs_credentials, request
+from hs_oauth import get_access_token, request
 
 TIME_UNITS = [('week', 7*24*60*60), ('day', 24*60*60), ('hour', 60*60), ('minute', 60), ('second', 1)]
 
@@ -70,7 +70,8 @@ if __name__ == '__main__':
     # HS auth
     HS_BASE_URL = 'https://www.hackerschool.com/api/v1'
 
-    username, password = get_hs_credentials()
+    username = os.environ.get('HS_LOGIN', None);
+    password = os.environ.get('HS_PASS', None);
     access_token, refresh_token = get_access_token(username=username, password=password)
 
     print 'HS OAauth: access token received'
