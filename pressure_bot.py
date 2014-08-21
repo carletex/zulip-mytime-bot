@@ -43,8 +43,8 @@ def get_time_diff(end_date, start_date = 0):
 def process_message(msg):
     content = msg['content'].upper().split()
 
-    if ((content[0] == "PRESSURE")
-        or (content[0] == "@**PRESSURE" and content[1] == "BOT**" and content[2] == "PRESSURE")):
+    if ((content[0] == "MYTIME")
+        or (content[0] == "@**PRESSURE" and content[1] == "BOT**" and content[2] == "MYTIME")):
         # Bot called
         # 1 - Get user's email
     	sender_email = msg['sender_email']
