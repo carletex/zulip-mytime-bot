@@ -72,7 +72,10 @@ if __name__ == '__main__':
 
     username = os.environ.get('HS_LOGIN', None);
     password = os.environ.get('HS_PASS', None);
-    access_token, refresh_token = get_access_token(username=username, password=password)
+    if username and password:
+        access_token, refresh_token = get_access_token(username=username, password=password)
+    else:
+        access_token, refresh_token = get_access_token()
 
     print 'HS OAauth: access token received'
     print 'Listening to messages...'
