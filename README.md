@@ -22,6 +22,6 @@ Zulip bot for Hackerschool, written in Python.
 7. Run `$ python pressure_bot` and enter your HackerSchool user and password to get the auth and access token
 8. Send `pressure` in a private message to your Zulip bot and you should receive your time left in HackerSchool
 
-## ToDo
+## Credits
 
-Currently, the bot only gets the info of the authenticated user. Waiting for the `get /person/:email` HS API implementation
+hs_oauth.py file was written by [@punchagan](https://github.com/punchagan)
