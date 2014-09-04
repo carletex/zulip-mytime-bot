@@ -5,7 +5,7 @@ Zulip bot for Hackerschool, written in Python.
 ## Usage
 
 1. Clone this repository
-2. Donwload and install the Python bindings from [Zulip](https://zulip.com/api/)
+2. Download and install the Python bindings from [Zulip](https://zulip.com/api/)
 3. Create a Zulip bot on https://zulip.com/#settings
 4. Create an OAuth application on you Hackerschool settings
    1. Use `urn:ietf:wg:oauth:2.0:oob` as your app redirect URI
